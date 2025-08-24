@@ -3,7 +3,7 @@
   --panel: #000000;
   --text: #ffffff;
   --muted: #aaaaaa;
-  --border: rgba(255, 255, 255, 0.18);
+  --border: rgba(255, 255, 255, 0.08);
   --maxw: 1100px;
   --gx: 92vw;
   --step--1: 0.9rem;
@@ -18,14 +18,17 @@
 *::after {
   box-sizing: border-box;
 }
+
 html {
   scroll-behavior: smooth;
 }
+
 html,
 body,
 #root {
   height: 100%;
 }
+
 body {
   margin: 0;
   color: var(--text);
@@ -54,6 +57,7 @@ h2 {
 h3 {
   font-size: var(--step-1);
 }
+
 p {
   margin: 0 0 12px;
 }
@@ -66,9 +70,40 @@ a {
   padding: clamp(140px, 18vh, 200px) 0;
   position: relative;
 }
+
 .section > * {
   width: min(var(--maxw), var(--gx));
   margin-inline: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.section::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: calc(min(var(--maxw), var(--gx)) + 64px);
+  height: 1px;
+  background: var(--border);
+}
+.section:last-of-type::after {
+  content: none;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(min(var(--maxw), var(--gx)) + 64px);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .grid {
@@ -87,23 +122,6 @@ a {
 }
 .small {
   font-size: var(--step--1);
-}
-
-.section::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -80px;
-  height: 1px;
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--border) 0 28px,
-    transparent 28px 46px
-  );
-}
-.section:last-of-type::after {
-  content: none;
 }
 
 .btn {

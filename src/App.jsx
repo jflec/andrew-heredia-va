@@ -4,6 +4,7 @@ import About from "./components/About";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import SectionHeader from "./components/SectionHeader";
+import Demos from "./components/Demos";
 
 export default function App() {
   const { content, loading, error } = useContent();
@@ -22,6 +23,12 @@ export default function App() {
         <section id="about" className="section" aria-label="About">
           <SectionHeader title="About" />
           <About />
+        </section>
+
+        {/* ✅ New Demos section */}
+        <section id="demos" className="section" aria-label="Demos">
+          <SectionHeader title="Demos" />
+          <Demos />
         </section>
 
         <section id="projects" className="section" aria-label="Projects">

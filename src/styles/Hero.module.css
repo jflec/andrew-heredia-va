@@ -42,3 +42,40 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+
+.socialRow {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.socialBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.iconRegular {
+  transition: opacity 0.2s ease;
+}
+.iconFill {
+  position: absolute;
+  top: 8;
+  left: 8;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.socialBtn:hover .iconRegular {
+  opacity: 0;
+}
+.socialBtn:hover .iconFill {
+  opacity: 1;
+}

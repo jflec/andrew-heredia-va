@@ -1,8 +1,10 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import Magnetic from "./Magnetic";
-import { springMd } from "../helpers/motion";
 import { useContent } from "../useContent";
 import styles from "../styles/Hero.module.css";
+import Magnetic from "./Magnetic";
+
+import { YoutubeLogoIcon } from "@phosphor-icons/react/dist/ssr/YoutubeLogo";
+import { TiktokLogoIcon } from "@phosphor-icons/react/dist/ssr/TiktokLogo";
 
 export default function Hero() {
   const { content, loading } = useContent();
@@ -11,7 +13,7 @@ export default function Hero() {
   const o = useTransform(scrollY, [0, 300], [1, 0.92]);
 
   if (loading || !content) return null;
-  const { site } = content;
+  const { site, social } = content;
 
   return (
     <motion.div
@@ -21,14 +23,10 @@ export default function Hero() {
       transition={{ duration: 0.7, ease: "easeOut" }}
       style={{ y, opacity: o }}
     >
-      <Magnetic
-        as="img"
+      <img
         src="/profile_picture.webp"
         alt={`${site.name} Headshot`}
         className={styles.avatar}
-        strength={16}
-        whileHover={{ scale: 1.03 }}
-        transition={springMd}
       />
 
       <p className={styles.eyebrow}>{site.role}</p>
@@ -36,17 +34,59 @@ export default function Hero() {
       <p className={styles.tagline}>{site.tagline}</p>
 
       <div className={styles.ctaRow}>
-        <Magnetic
-          as="a"
-          href="#projects"
-          className="btn primary"
-          transition={springMd}
-        >
-          See Projects
+        <Magnetic>
+          <a href="#projects" className="btn primary">
+            See Projects
+          </a>
         </Magnetic>
-        <Magnetic as="a" href="#contact" className="btn" transition={springMd}>
-          Book {site.name.split(" ")[0]}
+        <Magnetic>
+          <a href="#contact" className="btn">
+            Book {site.name.split(" ")[0]}
+          </a>
         </Magnetic>
+      </div>
+
+      <div className={styles.socialRow}>
+        {social?.tiktok && (
+          <a
+            href={social.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok"
+            className={styles.socialBtn}
+          >
+            <TiktokLogoIcon
+              size={32}
+              weight="regular"
+              className={styles.iconRegular}
+            />
+            <TiktokLogoIcon
+              size={32}
+              weight="fill"
+              className={styles.iconFill}
+            />
+          </a>
+        )}
+        {social?.youtube && (
+          <a
+            href={social.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+            className={styles.socialBtn}
+          >
+            <YoutubeLogoIcon
+              size={32}
+              weight="regular"
+              className={styles.iconRegular}
+            />
+            <YoutubeLogoIcon
+              size={32}
+              weight="fill"
+              className={styles.iconFill}
+            />
+          </a>
+        )}
       </div>
     </motion.div>
   );

@@ -3,32 +3,56 @@
     "name": "Andrew Heredia",
     "role": "Voice Actor",
     "tagline": "Warm • Versatile • Broadcast-quality",
-    "email": "andrew@example.com"
+    "email": "andrewherediavo@gmail.com"
+  },
+  "social": {
+    "youtube": "https://www.youtube.com/@PandalisticsVA",
+    "tiktok": "https://www.tiktok.com/@pandalistics"
   },
   "about": {
-    "lead": "Andrew is a Texas-based voice actor delivering polished reads for commercials, trailers, games, and corporate narration. Fast turnaround and pristine audio.",
+    "lead": "Andrew is a California-based voice actor delivering polished reads for commercials, trailers, games, animations, and corporate narration. Fast turnaround and pristine audio.",
     "keyValues": [
       { "k": "Studio", "v": "Treated booth, XLR chain" },
-      { "k": "Gear", "v": "Condenser mic, interface, DAW" },
-      { "k": "Styles", "v": "Conversational, authoritative, playful" },
+      {
+        "k": "Gear",
+        "v": "Electro-Voice RE20 Dynamic Broadcast Microphone, Motu-M2 Interface, Reaper"
+      },
+      { "k": "Styles", "v": "Conversational, Expressive, Dramatic" },
       { "k": "Delivery", "v": "24–48h typical" }
     ]
   },
   "projects": [
     {
-      "title": "Ad Spot — Acme Outdoors",
-      "desc": "30s commercial voiceover with upbeat, conversational tone.",
-      "href": "https://example.com/acme-spot"
+      "title": "Isagi's Two-Gun Volley Fan Dub",
+      "desc": "A small showcase of some of the dramatic emotion I can perform",
+      "href": "https://youtu.be/ytvXzma5d3M?si=iSNIrdFn97G4UGqU"
     },
     {
-      "title": "Narration — Skyline Expo",
-      "desc": "2-minute event teaser narration. Clear, confident delivery.",
-      "href": "https://example.com/skyline-expo"
+      "title": "Moonrise Academy",
+      "desc": "Trailer for the not yet released Minecraft Roleplay Series",
+      "href": "https://youtu.be/51Cq3cjOPEY?si=AXSPtoT2KCtQToGN&t=88"
     },
     {
-      "title": "Character Reel",
-      "desc": "Compilation of character voices for animation and games.",
-      "href": "https://example.com/character-reel"
+      "title": "Steven Universe Abridged (unreleased)",
+      "desc": "Fan episode of the popular show Steven Universe (no official trailer yet)",
+      "href": "https://cstng.cc/s/3977862"
+    }
+  ],
+  "demos": [
+    {
+      "title": "Sample Track 1",
+      "desc": "Public domain test sound.",
+      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+    },
+    {
+      "title": "Sample Track 2",
+      "desc": "Another test sound.",
+      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+    },
+    {
+      "title": "Sample Track 3",
+      "desc": "Third test sound.",
+      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
     }
   ]
 }

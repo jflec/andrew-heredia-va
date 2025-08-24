@@ -1,0 +1,126 @@
+.grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  padding: 16px;
+}
+
+.meta {
+  margin-bottom: 12px;
+}
+.title {
+  font-size: var(--step-1);
+  margin: 0 0 4px;
+}
+.desc {
+  color: var(--muted);
+  margin: 0;
+}
+
+.controlsBlock {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.line {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  border: 0;
+  background-color: transparent;
+  border-radius: 999px;
+  outline: none;
+
+  background: linear-gradient(
+    90deg,
+    var(--text) 0%,
+    var(--text) var(--val, 0%),
+    transparent var(--val, 0%),
+    transparent 100%
+  );
+  transition: background 0.12s linear;
+  background-clip: padding-box;
+}
+
+.line::-webkit-slider-runnable-track {
+  height: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+}
+.line::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 0;
+  height: 0;
+  border: 0;
+  background: transparent;
+}
+
+.line::-moz-range-track {
+  height: inherit;
+  background: transparent;
+  border: 0;
+}
+.line::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: 0;
+  background: transparent;
+}
+
+.line::-ms-track {
+  height: inherit;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.line::-ms-fill-lower,
+.line::-ms-fill-upper {
+  background: transparent;
+  border: 0;
+}
+
+.progressLine {
+  height: 8px;
+}
+.volumeLine {
+  height: 2px;
+}
+
+.playBtn {
+  width: 100%;
+  border: 2px solid var(--text);
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  font-weight: 600;
+  transition: transform 0.1s ease, background 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.playBtn:hover {
+  transform: translateY(-1px);
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.playBtn:focus-visible {
+  outline: 2px dashed var(--text);
+  outline-offset: 2px;
+}
