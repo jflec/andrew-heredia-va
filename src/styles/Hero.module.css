@@ -8,8 +8,8 @@
 .avatar {
   display: block;
   margin: 0 auto 16px;
-  width: 120px;
-  height: 120px;
+  width: 108px;
+  height: 108px;
   border-radius: 25%;
   object-fit: cover;
   will-change: transform;

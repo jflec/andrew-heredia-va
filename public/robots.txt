@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.andrewheredia.com/sitemap.xml
