@@ -1,0 +1,34 @@
+{
+  "site": {
+    "name": "Andrew Heredia",
+    "role": "Voice Actor",
+    "tagline": "Warm • Versatile • Broadcast-quality",
+    "email": "andrew@example.com"
+  },
+  "about": {
+    "lead": "Andrew is a Texas-based voice actor delivering polished reads for commercials, trailers, games, and corporate narration. Fast turnaround and pristine audio.",
+    "keyValues": [
+      { "k": "Studio", "v": "Treated booth, XLR chain" },
+      { "k": "Gear", "v": "Condenser mic, interface, DAW" },
+      { "k": "Styles", "v": "Conversational, authoritative, playful" },
+      { "k": "Delivery", "v": "24–48h typical" }
+    ]
+  },
+  "projects": [
+    {
+      "title": "Ad Spot — Acme Outdoors",
+      "desc": "30s commercial voiceover with upbeat, conversational tone.",
+      "href": "https://example.com/acme-spot"
+    },
+    {
+      "title": "Narration — Skyline Expo",
+      "desc": "2-minute event teaser narration. Clear, confident delivery.",
+      "href": "https://example.com/skyline-expo"
+    },
+    {
+      "title": "Character Reel",
+      "desc": "Compilation of character voices for animation and games.",
+      "href": "https://example.com/character-reel"
+    }
+  ]
+}

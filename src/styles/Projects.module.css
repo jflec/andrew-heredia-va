@@ -1,0 +1,25 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  transition: none;
+}
+
+.title {
+  margin-bottom: 6px;
+}
+
+.desc {
+  color: var(--muted);
+}
+
+.actions {
+  margin-top: 12px;
+}

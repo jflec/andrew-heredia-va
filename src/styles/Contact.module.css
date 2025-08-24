@@ -1,0 +1,10 @@
+.form {
+  display: grid;
+  gap: 26px;
+  padding-top: 12px;
+}
+.twoCol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
