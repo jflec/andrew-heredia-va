@@ -1,3 +1,7 @@
 .wrap {
   margin-bottom: 32px;
 }
+
+.header {
+  font-weight: bold;
+}

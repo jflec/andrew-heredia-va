@@ -24,7 +24,7 @@ export default function Hero() {
       style={{ y, opacity: o }}
     >
       <img
-        src="/profile_picture.webp"
+        src="/andrew_photo.webp"
         alt={`${site.name} Headshot`}
         className={styles.avatar}
       />

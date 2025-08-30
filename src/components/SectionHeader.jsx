@@ -10,7 +10,9 @@ export default function SectionHeader({ title, sub }) {
       whileInView="show"
       viewport={{ once: true, amount: 0.6 }}
     >
-      <motion.h2 variants={revealChild(10, 0.4)}>{title}</motion.h2>
+      <motion.h2 variants={revealChild(10, 0.4)} className={styles.header}>
+        {title}
+      </motion.h2>
       {sub && (
         <motion.p className="muted" variants={revealChild(8, 0.4)}>
           {sub}

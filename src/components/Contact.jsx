@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { revealChild } from "../helpers/motion";
 import { useContent } from "../useContent";
@@ -7,8 +8,46 @@ import { springMd } from "../helpers/motion";
 
 export default function Contact() {
   const { content, loading } = useContent();
+  const [sending, setSending] = useState(false);
   if (loading || !content) return null;
   const { site } = content;
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+
+    if (!data.email || !data.message) {
+      alert("Please provide your email and a message.");
+      return;
+    }
+
+    try {
+      setSending(true);
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          project: data.project,
+          message: data.message,
+          pot: data.company || "",
+        }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        e.target.reset();
+        alert("Thanks! Your message was sent.");
+      } else {
+        alert(json.error || "Sorry, something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Sorry, something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <motion.form
@@ -16,21 +55,7 @@ export default function Contact() {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.5 }}
-      onSubmit={(e) => {
-        e.preventDefault();
-        const data = Object.fromEntries(
-          new FormData(e.currentTarget).entries()
-        );
-        const subject = encodeURIComponent(
-          `VO Inquiry — ${data.project || "Project"}`
-        );
-        const body = encodeURIComponent(
-          `Hi ${site.name},%0D%0A%0D%0A${data.message || ""}%0D%0A%0D%0A— ${
-            data.name || ""
-          } (${data.email || ""})`
-        );
-        window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
-      }}
+      onSubmit={handleSubmit}
     >
       <motion.div className={styles.twoCol} variants={revealChild()}>
         <label>
@@ -62,21 +87,29 @@ export default function Contact() {
           name="message"
           rows="6"
           placeholder="Share details, timeline, tone…"
-        ></textarea>
+        />
       </motion.label>
 
+      <input
+        name="company"
+        autoComplete="off"
+        tabIndex={-1}
+        style={{ display: "none" }}
+      />
+
       <Magnetic
-        as="button" // ⬅️ string, not motion.button
-        className="btn primary"
+        as="button"
         type="submit"
+        className="btn primary"
         transition={springMd}
-        whileHover={{ scale: 1.03 }} // optional
+        whileHover={{ scale: 1.03 }}
+        disabled={sending}
       >
-        Send Email
+        {sending ? "Sending..." : "Send Email"}
       </Magnetic>
 
       <motion.p className="muted small" variants={revealChild(6, 0.35)}>
-        Prefer direct? {site.email}
+        Prefer direct? <a href={`mailto:${site.email}`}>{site.email}</a>
       </motion.p>
     </motion.form>
   );
