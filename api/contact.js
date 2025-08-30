@@ -1,3 +1,4 @@
+// api/contact.js
 import { Resend } from "resend";
 
 export const runtime = "nodejs";
@@ -5,6 +6,7 @@ export const runtime = "nodejs";
 const RESEND_KEY = (process.env.RESEND_API_KEY || "").trim();
 const CONTACT_TO = (process.env.CONTACT_TO || "").trim();
 const FROM = (process.env.CONTACT_FROM || "onboarding@resend.dev").trim();
+const DEBUG_PROVIDER_ERRORS = (process.env.DEBUG_PROVIDER_ERRORS || "") === "1";
 
 const resend = new Resend(RESEND_KEY);
 
@@ -43,10 +45,17 @@ export async function GET() {
       subject: "Hello World",
       html: "<p>Test email from /api/contact (GET)</p>",
     });
-    if (error) return err(error.message);
+    if (error) {
+      console.error("Resend error (GET):", error);
+      const status = error.statusCode ?? error.status ?? 502;
+      return DEBUG_PROVIDER_ERRORS
+        ? err(`${status}: ${error.message}`, status)
+        : err("Email send failed.", 502);
+    }
     return ok({ id: data?.id, mode: "hello" });
   } catch (e) {
-    return err(String(e));
+    console.error("GET /api/contact exception:", e);
+    return err("Internal error.", 500);
   }
 }
 
@@ -59,13 +68,13 @@ export async function POST(request) {
     body = await request.json();
   } catch {
     console.log(
-      "Something went wrong! Please contact andrewherediavo@gmail.com"
+      "Something went wrong parsing JSON. Please contact andrewherediavo@gmail.com"
     );
   }
 
   const { name = "", email = "", project = "", message = "", pot = "" } = body;
 
-  if (pot) return ok();
+  if (pot) return ok(); // honeypot
 
   if (!email || !message) return err("email and message are required", 400);
 
@@ -86,9 +95,16 @@ export async function POST(request) {
       subject,
       html,
     });
-    if (error) return err(error.message);
+    if (error) {
+      console.error("Resend error (POST):", error);
+      const status = error.statusCode ?? error.status ?? 502;
+      return DEBUG_PROVIDER_ERRORS
+        ? err(`${status}: ${error.message}`, status)
+        : err("Email send failed.", 502);
+    }
     return ok({ id: data?.id });
   } catch (e) {
-    return err(String(e));
+    console.error("POST /api/contact exception:", e);
+    return err("Internal error.", 500);
   }
 }
