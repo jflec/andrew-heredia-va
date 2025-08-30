@@ -1,5 +1,4 @@
 /* eslint-env node */
-// api/contact.js
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -9,7 +8,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: "Use POST /api/contact" });
   }
 
-  const body = await readJson(req);
+  // Vercel usually gives parsed JSON in req.body; safely parse if it's a string
+  let body = req.body || {};
+  if (typeof body === "string") {
+    try {
+      body = JSON.parse(body || "{}");
+    } catch (err) {
+      body = {}; // fallback instead of an empty catch (fixes 'Empty block statement')
+    }
+  }
+
   const { name = "", email = "", project = "", message = "" } = body;
 
   if (!email || !message) {
@@ -18,18 +26,19 @@ export default async function handler(req, res) {
       .json({ ok: false, error: "email and message are required" });
   }
 
-  // Keep it simple like the example: use Resend's onboarding sender for now.
   const subject = `VO Inquiry — ${project || "Project"}`;
   const html = `
-    <p><strong>From:</strong> ${escape(name)} &lt;${escape(email)}&gt;</p>
-    <p><strong>Project:</strong> ${escape(project || "-")}</p>
+    <p><strong>From:</strong> ${escapeHtml(name)} &lt;${escapeHtml(
+    email
+  )}&gt;</p>
+    <p><strong>Project:</strong> ${escapeHtml(project || "-")}</p>
     <hr/>
-    <div>${escape(message).replace(/\n/g, "<br/>")}</div>
+    <div>${escapeHtml(message).replace(/\n/g, "<br/>")}</div>
   `;
 
   const { data, error } = await resend.emails.send({
-    from: "onboarding@resend.dev", // super simple; no DNS setup required
-    to: process.env.CONTACT_TO, // your inbox
+    from: "onboarding@resend.dev", // simple sender; no DNS setup needed
+    to: process.env.CONTACT_TO, // your inbox (set in Vercel env)
     replyTo: email, // replies go to the visitor
     subject,
     html,
@@ -39,23 +48,16 @@ export default async function handler(req, res) {
   return res.status(200).json({ ok: true, id: data?.id });
 }
 
-function escape(s = "") {
+function escapeHtml(s = "") {
   return String(s).replace(
     /[&<>"']/g,
     (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[
-        c
-      ])
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      }[c])
   );
-}
-
-async function readJson(req) {
-  if (req.body) return req.body;
-  const chunks = [];
-  for await (const ch of req) chunks.push(ch);
-  try {
-    return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-  } catch {
-    return {};
-  }
 }
