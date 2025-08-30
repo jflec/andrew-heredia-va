@@ -14,7 +14,12 @@ export default function Contact() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+
+    // Cache the form immediately so we don't rely on the event later
+    const form = e.currentTarget; // this IS the <form>
+    if (!form) return; // extra guard
+
+    const data = Object.fromEntries(new FormData(form).entries());
 
     if (!data.email || !data.message) {
       alert("Please provide your email and a message.");
@@ -23,6 +28,7 @@ export default function Contact() {
 
     try {
       setSending(true);
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,12 +37,14 @@ export default function Contact() {
           email: data.email,
           project: data.project,
           message: data.message,
-          pot: data.company || "",
+          pot: data.company || "", // honeypot
         }),
       });
+
       const json = await res.json();
+
       if (json.ok) {
-        e.target.reset();
+        form.reset(); // ✅ reset the cached form, not e.target / e.currentTarget
         alert("Thanks! Your message was sent.");
       } else {
         alert(json.error || "Sorry, something went wrong. Please try again.");

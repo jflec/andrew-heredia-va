@@ -1,55 +1,20 @@
-/* eslint-env node */
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const runtime = "nodejs";
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ ok: false, error: "Use POST /api/contact" });
-  }
+const RESEND_KEY = (process.env.RESEND_API_KEY || "").trim();
+const CONTACT_TO = (process.env.CONTACT_TO || "").trim();
+const FROM = (process.env.CONTACT_FROM || "onboarding@resend.dev").trim();
 
-  // Vercel usually gives parsed JSON in req.body; safely parse if it's a string
-  let body = req.body || {};
-  if (typeof body === "string") {
-    try {
-      body = JSON.parse(body || "{}");
-    } catch (err) {
-      body = {}; // fallback instead of an empty catch (fixes 'Empty block statement')
-    }
-  }
+const resend = new Resend(RESEND_KEY);
 
-  const { name = "", email = "", project = "", message = "" } = body;
+const err = (msg, status = 500) =>
+  Response.json({ ok: false, error: msg }, { status });
+const ok = (body = {}, status = 200) =>
+  Response.json({ ok: true, ...body }, { status });
 
-  if (!email || !message) {
-    return res
-      .status(400)
-      .json({ ok: false, error: "email and message are required" });
-  }
-
-  const subject = `VO Inquiry — ${project || "Project"}`;
-  const html = `
-    <p><strong>From:</strong> ${escapeHtml(name)} &lt;${escapeHtml(
-    email
-  )}&gt;</p>
-    <p><strong>Project:</strong> ${escapeHtml(project || "-")}</p>
-    <hr/>
-    <div>${escapeHtml(message).replace(/\n/g, "<br/>")}</div>
-  `;
-
-  const { data, error } = await resend.emails.send({
-    from: "onboarding@resend.dev", // simple sender; no DNS setup needed
-    to: process.env.CONTACT_TO, // your inbox (set in Vercel env)
-    replyTo: email, // replies go to the visitor
-    subject,
-    html,
-  });
-
-  if (error) return res.status(500).json({ ok: false, error: error.message });
-  return res.status(200).json({ ok: true, id: data?.id });
-}
-
-function escapeHtml(s = "") {
-  return String(s).replace(
+const escapeHTML = (s = "") =>
+  String(s).replace(
     /[&<>"']/g,
     (c) =>
       ({
@@ -60,4 +25,70 @@ function escapeHtml(s = "") {
         "'": "&#39;",
       }[c])
   );
+
+const ensureEnv = () => {
+  if (!RESEND_KEY) return err("RESEND_API_KEY missing");
+  if (!CONTACT_TO) return err("CONTACT_TO missing");
+  return null;
+};
+
+export async function GET() {
+  const bad = ensureEnv();
+  if (bad) return bad;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: FROM,
+      to: CONTACT_TO,
+      subject: "Hello World",
+      html: "<p>Test email from /api/contact (GET)</p>",
+    });
+    if (error) return err(error.message);
+    return ok({ id: data?.id, mode: "hello" });
+  } catch (e) {
+    return err(String(e));
+  }
+}
+
+export async function POST(request) {
+  const bad = ensureEnv();
+  if (bad) return bad;
+
+  let body = {};
+  try {
+    body = await request.json();
+  } catch {
+    console.log(
+      "Something went wrong! Please contact andrewherediavo@gmail.com"
+    );
+  }
+
+  const { name = "", email = "", project = "", message = "", pot = "" } = body;
+
+  if (pot) return ok();
+
+  if (!email || !message) return err("email and message are required", 400);
+
+  const subject = `Voice Acting: ${project || "Project"}`;
+  const html = `
+    <p><strong>From:</strong> ${escapeHTML(name)} &lt;${escapeHTML(
+    email
+  )}&gt;</p>
+    <p><strong>Project:</strong> ${escapeHTML(project || "-")}</p>
+    <hr/><div>${escapeHTML(message).replace(/\n/g, "<br/>")}</div>
+  `;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: FROM,
+      to: CONTACT_TO,
+      replyTo: email,
+      subject,
+      html,
+    });
+    if (error) return err(error.message);
+    return ok({ id: data?.id });
+  } catch (e) {
+    return err(String(e));
+  }
 }
