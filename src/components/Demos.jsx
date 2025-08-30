@@ -18,7 +18,7 @@ function valueFromPointerEvent(e, el) {
   return clamp01(x / rect.width);
 }
 
-const DemoPlayer = memo(function DemoPlayer({ title, desc, src }) {
+const DemoPlayer = memo(function DemoPlayer({ title, src }) {
   const audioRef = useRef(null);
   const progressInputRef = useRef(null);
   const volumeInputRef = useRef(null);
@@ -48,45 +48,42 @@ const DemoPlayer = memo(function DemoPlayer({ title, desc, src }) {
   }, []);
 
   useEffect(() => {
-    const onMove = (e) => {
-      if (
-        draggingRef.current.progress &&
-        progressInputRef.current &&
-        audioRef.current
-      ) {
-        const val = valueFromPointerEvent(e, progressInputRef.current);
-        const a = audioRef.current;
-        if (a.duration) {
-          a.currentTime = val * a.duration;
-          setProgress(val);
-        }
-      }
-      if (draggingRef.current.volume && volumeInputRef.current) {
-        const val = valueFromPointerEvent(e, volumeInputRef.current);
-        setVolume(val);
-      }
+    const a = audioRef.current;
+    if (!a) return;
+
+    const onTime = () => {
+      if (a.duration) setProgress(a.currentTime / a.duration);
     };
-    const onUp = () => {
-      draggingRef.current.progress = false;
-      draggingRef.current.volume = false;
-    };
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
+    const onEnded = () => setPlaying(false);
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
+
+    a.addEventListener("timeupdate", onTime);
+    a.addEventListener("ended", onEnded);
+    a.addEventListener("play", onPlay);
+    a.addEventListener("pause", onPause);
+
     return () => {
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
+      a.removeEventListener("timeupdate", onTime);
+      a.removeEventListener("ended", onEnded);
+      a.removeEventListener("play", onPlay);
+      a.removeEventListener("pause", onPause);
     };
   }, []);
 
   const togglePlay = () => {
     const a = audioRef.current;
     if (!a) return;
+
     if (a.paused) {
+      if (typeof document !== "undefined") {
+        document.querySelectorAll("audio").forEach((el) => {
+          if (el !== a) el.pause();
+        });
+      }
       a.play();
-      setPlaying(true);
     } else {
       a.pause();
-      setPlaying(false);
     }
   };
 
@@ -128,7 +125,6 @@ const DemoPlayer = memo(function DemoPlayer({ title, desc, src }) {
     <div className={styles.card}>
       <div className={styles.meta}>
         <h3 className={styles.title}>{title}</h3>
-        {desc && <p className={styles.desc}>{desc}</p>}
       </div>
 
       <div className={styles.controlsBlock}>
@@ -190,18 +186,15 @@ export default function Demos() {
     : [
         {
           title: "Commercial Demo",
-          desc: "Upbeat, confident commercial read.",
-          src: "/demos/commercial-demo.mp3",
+          src: "/demo_tape_one.mp3",
         },
         {
           title: "Narration Demo",
-          desc: "Warm, clear corporate narration.",
-          src: "/demos/narration-demo.mp3",
+          src: "/demo_tape_two.mp3",
         },
         {
           title: "Character Demo",
-          desc: "Expressive, dramatic character reel.",
-          src: "/demos/character-demo.mp3",
+          src: "/demo_tape_three.mp3",
         },
       ];
 
@@ -216,7 +209,7 @@ export default function Demos() {
       <div className={styles.grid}>
         {demos.map((d, i) => (
           <motion.article key={i} variants={revealChild()}>
-            <DemoPlayer key={i} title={d.title} desc={d.desc} src={d.src} />
+            <DemoPlayer key={i} title={d.title} src={d.src} />
           </motion.article>
         ))}
       </div>

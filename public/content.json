@@ -40,19 +40,16 @@
   ],
   "demos": [
     {
-      "title": "Sample Track 1",
-      "desc": "Public domain test sound.",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      "title": "Andrew Heredia Demo Reel",
+      "src": "/demo_tape_one.mp3"
     },
     {
-      "title": "Sample Track 2",
-      "desc": "Another test sound.",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+      "title": "Demon Audition Showcase",
+      "src": "/demo_tape_two.mp3"
     },
     {
-      "title": "Sample Track 3",
-      "desc": "Third test sound.",
-      "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+      "title": "Hero Type Audition Showcase",
+      "src": "/demo_tape_three.mp3"
     }
   ]
 }

@@ -35,8 +35,8 @@ export default function Hero() {
 
       <div className={styles.ctaRow}>
         <Magnetic>
-          <a href="#projects" className="btn primary">
-            See Projects
+          <a href="#demos" className="btn primary">
+            See Demos
           </a>
         </Magnetic>
         <Magnetic>
